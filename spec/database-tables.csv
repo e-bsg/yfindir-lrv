@@ -1,0 +1,15 @@
+Table,Purpose,Key Relationships
+users,"Account holders with roles, subscriptions, & notification prefs","has many companies, listings, messages"
+companies,B2B company profiles,"belongs to user, has transport_details, photos, listings"
+company_members,Multi-user per company (owner/manager/editor),belongs to company + user
+transport_details,Transport-specific capabilities,one-to-one with companies
+listings,"Job offers, job seeking, services (max 6mo expiry)","belongs to user, optional company"
+categories,Nested category tree (translatable),self-referencing parent_id
+company_photos,Multiple images per company (up to 3 free / 12 premium),belongs to company
+message_threads,Conversation containers,has many participants + messages
+thread_participants,Users in a thread + read state,belongs to thread + user
+messages,Individual messages + 7-day ephemeral attachments,belongs to thread + user (sender)
+moderation_logs,Audit trail for all moderation actions,"morphTo moderatable, belongs to moderator"
+settings,Platform configuration key-value store,standalone
+inquiries,Buyer-to-company contact (lead generation),"belongs to company, optional listing"
+saved_searches,User-saved filter criteria + alerts,belongs to user

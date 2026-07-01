@@ -1,0 +1,82 @@
+flowchart TB
+    subgraph Public["Public Site — Blade + Livewire"]
+        HOME[Homepage]
+        CATALOG[Catalog + Filters]
+        TRANSPORT[Transport Directory]
+        LISTINGS[Listings Board]
+        PROFILE[Company Profile]
+        AUTH[Login / Register]
+    end
+
+    subgraph MemberDash["Member Dashboard — Filament Panel"]
+        MYCOMP[My Companies]
+        MYLIST[My Listings]
+        MESSAGES[Messages + Inbox]
+        INQUIRIES[Inquiries]
+        SAVED[Saved Searches]
+    end
+
+    subgraph AdminPanel["Admin Panel — Filament Panel"]
+        USERS[User Management]
+        MODERATION[Moderation Queue]
+        THREADS[All Message Threads]
+        SETTINGS[Platform Settings]
+        LOGS[Audit Logs]
+    end
+
+    subgraph Core["Service Layer — PHP Classes"]
+        MODSVC[ModerationService]
+        SEARCHSVC[SearchRankingService]
+        QUOTASVC[QuotaService]
+        MSGSVC[MessagingService]
+        SUBSVC[SubscriptionService]
+    end
+
+    subgraph Data["Data Layer"]
+        DB[(MySQL / MariaDB)]
+        STORAGE[(Local Storage disk)]
+    end
+
+    subgraph CI["CI/CD Pipeline"]
+        GH[GitHub Actions]
+        FTP[FTP Deploy]
+    end
+
+    subgraph Server["Production — cPanel / Apache"]
+        CPANEL[cPanel Shared Hosting]
+        CRON[Laravel Scheduler cron]
+    end
+
+    subgraph Local["Local Dev"]
+        CADDY[Caddy v2 + PHP-FPM]
+        VITE[Vite Dev Server]
+    end
+
+    Public --> Core
+    MemberDash --> Core
+    AdminPanel --> Core
+    Core --> DB
+    Core --> STORAGE
+    GH -->|build + compile| FTP
+    FTP -->|upload artifact| CPANEL
+    CPANEL --> DB
+    CPANEL --> STORAGE
+    CRON --> CPANEL
+    CADDY -->|serve locally| DB
+    VITE -->|hot reload| CADDY
+
+    classDef panel fill:#01696f,stroke:#fff,color:#fff
+    classDef service fill:#7a39bb,stroke:#fff,color:#fff
+    classDef data fill:#28251d,stroke:#fff,color:#fff
+    classDef infra fill:#da7101,stroke:#fff,color:#fff
+    classDef server fill:#437a22,stroke:#fff,color:#fff
+    classDef local fill:#006494,stroke:#fff,color:#fff
+
+    class HOME,CATALOG,TRANSPORT,LISTINGS,PROFILE,AUTH panel
+    class MYCOMP,MYLIST,MESSAGES,INQUIRIES,SAVED panel
+    class USERS,MODERATION,THREADS,SETTINGS,LOGS panel
+    class MODSVC,SEARCHSVC,QUOTASVC,MSGSVC,SUBSVC service
+    class DB,STORAGE data
+    class GH,FTP infra
+    class CPANEL,CRON server
+    class CADDY,VITE local
